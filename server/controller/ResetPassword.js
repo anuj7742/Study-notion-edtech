@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const mailSender = require("../utils/mailSender");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const crypto = require("crypto");
 
 //resetPassword token 
@@ -122,7 +122,7 @@ exports.resetPassword = async (req,res) =>{
             })
         }
         //hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
         //password update
         await User.findOneAndUpdate(

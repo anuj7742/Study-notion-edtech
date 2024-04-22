@@ -1,7 +1,7 @@
 const User = require("../models/User");
 const OTP =  require("../models/OTP");
 const otpGenerator = require("otp-generator")
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const Profile = require("../models/Profile");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -133,7 +133,7 @@ exports.signup = async (req,res) =>{
         }
         
         //Hash Password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
 
         //entry create in db 
@@ -196,7 +196,7 @@ exports.login = async (req,res) =>{
         }
 
         //password match
-        if(await bcrypt.compare(password, user.password)){
+        if(await bcryptjs.compare(password, user.password)){
             const payload = {
                 email: user.email,
                 id: user._id,
@@ -244,7 +244,7 @@ exports.changePassword = async (req, res) => {
 		const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
 		// Validate old password
-		const isPasswordMatch = await bcrypt.compare(
+		const isPasswordMatch = await bcryptjs.compare(
 			oldPassword,
 			userDetails.password
 		);
@@ -265,7 +265,7 @@ exports.changePassword = async (req, res) => {
 		// }
 
 		// Update password
-		const encryptedPassword = await bcrypt.hash(newPassword, 10);
+		const encryptedPassword = await bcryptjs.hash(newPassword, 10);
 		const updatedUserDetails = await User.findByIdAndUpdate(
 			req.user.id,
 			{ password: encryptedPassword },
